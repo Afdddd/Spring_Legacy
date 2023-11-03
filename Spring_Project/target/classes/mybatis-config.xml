@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	
+	<typeAliases></typeAliases>
+	
+	<!--  enviroments 영역은 제외 	
+		=> db 등록은 서버연동과 동시에 스프링이 제일 먼저 알아야 하는 정보이기 때문에 root-context.xml에 기술	
+	-->	
+	
+	<mappers></mappers>
+</configuration>

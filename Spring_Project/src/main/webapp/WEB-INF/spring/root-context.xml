@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+ 		<bean class="org.apache.commons.dbcp.BasicDataSource" id="basicDataSource" destroy-method="close">			
+			<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+			<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+			<property name="username" value="SPRING" />
+			<property name="password" value="SPRING" />
+		</bean>
+		
+		<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+			<property name="configLocation" value="classpath:mybatis-config.xml" />
+			<!-- classpath:src/main/resources/ 폴더로부터 시작하는 경로를 지정 -->
+			
+			<property name="dataSource" ref="basicDataSource" />
+			<!--  ref: 객체타입을 초기화 할때 사용  -->									
+		</bean>
+		
+		<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
+			<constructor-arg ref="sqlSessionFactory"/>		
+		</bean>
+</beans>

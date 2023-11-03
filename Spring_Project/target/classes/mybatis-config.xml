@@ -8,11 +8,15 @@
 		<setting name="jdbcTypeForNull" value="NULL"/>
 	</settings>
 	
-	<typeAliases></typeAliases>
+	<typeAliases>
+		<typeAlias type="com.kh.spring.member.model.vo.Member" alias="member"/>
+		<typeAlias type="com.kh.spring.board.model.vo.Board"   alias="board"/>
+		<typeAlias type="com.kh.spring.board.model.vo.Reply"   alias="reply"/>	
+	</typeAliases>
 	
-	<!--  enviroments 영역은 제외 	
-		=> db 등록은 서버연동과 동시에 스프링이 제일 먼저 알아야 하는 정보이기 때문에 root-context.xml에 기술	
-	-->	
-	
-	<mappers></mappers>
+	<mappers>
+		 <mapper resource="/mappers/member-mapper.xml"/>
+		 <mapper resource="/mappers/board-mapper.xml"/>
+	</mappers>
+			
 </configuration>

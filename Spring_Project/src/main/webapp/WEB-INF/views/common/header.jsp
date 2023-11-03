@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -69,16 +70,21 @@
             </div>
             <div id="header_1_center"></div>
             <div id="header_1_right">
+            
+            <c:choose>
+              <c:when test="${empty sessionScope.loginUser}">
                 <!-- 로그인 전 -->
                 <a href="">회원가입</a>
                 <a data-toggle="modal" data-target="#loginModal">로그인</a> <!-- 모달의 원리 : 이 버튼 클릭시 data-target에 제시되어있는 해당 아이디의 div요소를 띄워줌 -->
-                
-                <!-- 로그인 후 -->
-                <!-- 
+              </c:when>
+              <c:otherwise>
+                <!-- 로그인 후 -->              
                     <label>홍길동님 환영합니다</label> &nbsp;&nbsp;
                     <a href="">마이페이지</a>
-                    <a href="">로그아웃</a>
-                -->
+                    <a href="">로그아웃</a>              
+              </c:otherwise>
+           </c:choose> 	
+            
             </div>
         </div>
         <div id="header_2">
@@ -101,13 +107,13 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
         
-                <form action="로그인요청받아주는서버" method="post">
+                <form action="login.me" method="post">
                     <!-- Modal body -->
                     <div class="modal-body">
                         <label for="userId" class="mr-sm-2">ID : </label>
-                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Enter ID" id="userId" name=""> <br>
+                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Enter ID" id="userId" name="userId"> <br>
                         <label for="userPwd" class="mr-sm-2">Password : </label>
-                        <input type="password" class="form-control mb-2 mr-sm-2" placeholder="Enter Password" id="userPwd" name="">
+                        <input type="password" class="form-control mb-2 mr-sm-2" placeholder="Enter Password" id="userPwd" name="userPwd">
                     </div>
                            
                     <!-- Modal footer -->

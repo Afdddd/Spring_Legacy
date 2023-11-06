@@ -6,6 +6,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <!-- JavaScript -->
+	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+	
+	<!-- CSS -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+	<!-- Default theme -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+	<!-- Semantic UI theme -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css"/>
     <!-- jQuery 라이브러리 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- 부트스트랩에서 제공하고 있는 스타일 -->
@@ -63,6 +72,16 @@
 </head>
 <body>
 
+
+	<c:if test="${!empty sessionScope.alertMsg}">
+		<script>
+			alertify.alert('알림', '${sessionScope.alertMsg}', function(){ alertify.success('ok'); });
+		</script>
+		
+		<!--  session의 alertMsg 지우기 -->
+		<c:remove var="alertMsg" scope="session"/>
+	</c:if>
+
     <div id="header">
         <div id="header_1">
             <div id="header_1_left">
@@ -80,7 +99,7 @@
               <c:otherwise>
                 <!-- 로그인 후 -->              
                     <label>${sessionScope.loginUser.userName}님 환영합니다</label> &nbsp;&nbsp;
-                    <a href="">마이페이지</a>
+                    <a href="mypage.me">마이페이지</a>
                     <a href="logout.me">로그아웃</a>              
               </c:otherwise>
            </c:choose> 	

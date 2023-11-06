@@ -19,10 +19,40 @@
 	
 	<!--  로그인 쿼리문 -->	
 	<select id="loginMember" parameterType="member" resultMap="memberResultMap" >
+		
+		<!-- 암호화 작업 전 쿼리문
 		SELECT *
 		  FROM MEMBER 
 		 WHERE USER_ID = #{userId}
 		   AND USER_PWD = #{userPwd}
 		   AND STATUS = 'Y'		
+		 -->
+		
+		 <!-- 암호화 작업 후 쿼리문 -->
+		 SELECT *
+		 FROM MEMBER 
+		 WHERE USER_ID = #{userId}
+		 AND STATUS = 'Y'
+		 
 	</select>
+	
+	
+	<insert id="insertMember" parameterType="member" >
+		INSERT INTO MEMBER(USER_ID,
+					USER_PWD,
+					USER_NAME,
+					EMAIL,
+					GENDER,
+					AGE,
+					PHONE,
+					ADDRESS)
+		 		VALUES(#{userId},
+		 			   #{userPwd},
+		 			   #{userName},
+		 			   #{email},
+		 			   #{gender},
+		 			   #{age},
+		 			   #{phone},
+		 			   #{address})
+	</insert>
 </mapper>

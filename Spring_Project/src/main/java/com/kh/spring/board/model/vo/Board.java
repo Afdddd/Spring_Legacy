@@ -19,6 +19,6 @@ public class Board {
 	private String originName;   // ORIGIN_NAME	VARCHAR2(100 BYTE)
 	private String changeName;   // CHANGE_NAME	VARCHAR2(100 BYTE)
 	private int count;		     //	COUNT	NUMBER
-	private Date createDate;     //	CREATE_DATE	DATE
+	private String createDate;     //	CREATE_DATE	DATE
 	private String status;       //	STATUS	VARCHAR2(1 BYTE)
 }

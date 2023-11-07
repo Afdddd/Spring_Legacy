@@ -2,4 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="boardMapper">
 
+	<resultMap id="boardResultSet" type="board">
+		<result column ="BOARD_NO" property="boardNo"/>
+		<result column ="BOARD_TITLE" property="boardTitle"/>
+		<result column ="BOARD_WRITER" property="boardWriter"/>
+		<result column ="ORIGIN_NAME" property="originName"/>
+		<result column ="COUNT" property="count"/>
+		<result column ="CREATE_DATE" property="createDate"/>
+	</resultMap>
+
+
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM BOARD
+		 WHERE STATUS = 'Y'		
+	 
+	</select>
+	
+	<select id="selectList" resultMap="boardResultSet" >
+		SELECT BOARD_NO
+			  ,BOARD_TITLE
+			  ,BOARD_WRITER
+			  ,COUNT
+			  ,TO_CHAR(CREATE_DATE,'YYYY-MM-DD') AS "CREATE_DATE"
+			  ,ORIGIN_NAME
+	      FROM BOARD
+		 WHERE STATUS = 'Y'
+		 ORDER BY BOARD_NO DESC
+	</select>
+
 </mapper>

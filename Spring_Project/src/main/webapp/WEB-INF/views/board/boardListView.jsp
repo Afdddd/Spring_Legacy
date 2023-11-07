@@ -36,7 +36,9 @@
             <h2>게시판</h2>
             <br>
             <!-- 로그인 후 상태일 경우만 보여지는 글쓰기 버튼 -->
-            <a class="btn btn-secondary" style="float:right;" href="">글쓰기</a>
+            <c:if test="${not empty sessionScope.loginUser}" >
+            	<a class="btn btn-secondary" style="float:right;" href="enrollForm.bo">글쓰기</a>
+            </c:if>
             <br>
             <br>
             <table id="boardList" class="table table-hover" align="center">
@@ -51,59 +53,54 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>5</td>
-                        <td>마지막 공지사항제목</td>
-                        <td>admin</td>
-                        <td>10</td>
-                        <td>2020-02-10</td>
-                        <td>★</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>네번째 공지사항제목</td>
-                        <td>admin</td>
-                        <td>10</td>
-                        <td>2020-02-07</td>
-                        <td>★</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>세번째 공지사항제목</td>
-                        <td>admin</td>
-                        <td>10</td>
-                        <td>2020-02-03</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>두번째 공지사항제목</td>
-                        <td>admin</td>
-                        <td>100</td>
-                        <td>2020-02-01</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>첫번째 공지사항제목</td>
-                        <td>admin</td>
-                        <td>45</td>
-                        <td>2019-12-25</td>
-                        <td>★</td>
-                    </tr>
+                	<c:forEach var="b" items="${requestScope.list}">
+	                    <tr>
+	                        <td>${b.boardNo}</td>
+	                        <td>${b.boardTitle }</td>
+	                        <td>${b.boardWriter }</td>
+	                        <td>${b.count }</td>
+	                        <td>${b.createDate }</td>
+	                        <td>
+	                        	<c:if test="${not empty b.originName}">
+	                        		★	
+	                        	</c:if>
+	                        </td>
+	                    </tr>
+                    </c:forEach>                    
                 </tbody>
             </table>
             <br>
 
             <div id="pagingArea">
                 <ul class="pagination">
-                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                	
+                	<c:choose>
+                		<c:when test="${requestScope.pi.currentPage eq 1}">
+	                    	<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+	                    </c:when>
+	                    <c:otherwise>
+	                  	  <li class="page-item "><a class="page-link" href="list.bo?cpage=${requestScope.pi.currentPage-1}">Previous</a></li>
+	                    </c:otherwise>	                    
+                    </c:choose>
+                    
+                    <c:forEach var="p" begin="${requestScope.pi.startPage }" end="${requestScope.pi.endPage}" step="1">                   
+                    	<li class="page-item">
+                    		<a class="page-link" href="list.bo?cpage=${p }">
+                    			${p }
+                    		</a>
+                    	</li>
+                    </c:forEach>
+                    
+                    <c:choose>
+                    	<c:when test="${requestScope.pi.currentPage eq requestScope.pi.maxPage }">
+                    		<li class="page-item disabled" ><a class="page-link" href="#">Next</a></li>
+                    	</c:when>
+                    	<c:otherwise>
+                    		<li class="page-item"><a class="page-link" href="list.bo?cpage=${requestScope.pi.currentPage+1}">Next</a></li>
+                    	</c:otherwise>
+                    
+                    </c:choose>
+                    
                 </ul>
             </div>
 

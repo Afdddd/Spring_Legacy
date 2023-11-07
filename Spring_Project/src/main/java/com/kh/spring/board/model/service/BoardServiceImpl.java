@@ -2,7 +2,7 @@ package com.kh.spring.board.model.service;
 
 import java.util.ArrayList;
 
-import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +15,19 @@ import com.kh.spring.common.model.vo.PageInfo;
 public class BoardServiceImpl implements BoardService{
 	
 	@Autowired
-	private BoardDao boardDoa;
+	private BoardDao boardDao;
 	
 	@Autowired
-	private SqlSessionFactory sqlSession;
+	private SqlSessionTemplate sqlSession;
 
 	@Override
 	public int selectListCount() {
-		return BoardDao.selectListCount(sqlSession);
+		return boardDao.selectListCount(sqlSession);
 	}
 
 	@Override
 	public ArrayList<Board> selectList(PageInfo pi) {
-		return null;
+		return boardDao.selectList(sqlSession, pi);
 	}
 
 	@Override

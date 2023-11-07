@@ -308,11 +308,75 @@ public class MemberController {
 		
 	}
 	
-	@RequestMapping("myPage.me")
+	@RequestMapping("mypage.me")
 	public String myPage() {
 		
-		return "member/myPage.jsp";
+		return "member/myPage";
 	}
+	
+	
+	@RequestMapping("update.me")
+	public String updateMember(Member m,HttpSession session,Model model) {
+		
+		int result = memberService.updateMember(m);
+		if(result > 0) {
+			log.info("update member = {}",m);
+			
+			Member updateMem = memberService.loginMember(m);
+			session.setAttribute("loginUser", updateMem);			
+			session.setAttribute("alertMsg", "성공적으로 수정이 되었습니다.");
+			return "redirect:/mypage.me";
+		}else {
+			model.addAttribute("errorMsg","수정 실패");
+			return "common/errorPage";
+		}
+	}
+	
+	@RequestMapping("delete.me")
+	public String deleteMember(String userId, String userPwd, HttpSession session, Model model) {
+				
+		// userId  : 탈퇴요청을 한 회원 아이디
+		// userPwd : 탈퇴요청을 한 회원의 비번 평문
+		
+		// DB로 부터 비번이 일치하는 조건을 가진 쿼리문 사용 불가
+		// Bcrypt 방식에 의해 암리 평문이 일치하더라도 매번 다른 암호문 결과가 나올것
+		// 현재 session에 담겨있는 회원의 정보 중 암호화된 비밀번호를 갖고와서 matches 메서드로 대조
+		
+		// session으로 부터 loginUser의 userPwd 필드값 갖고오기
+		// (암호화된 비번)
+		String encPwd = ((Member)session.getAttribute("loginUser")).getUserPwd();
+		
+		// 비밀번호 대조작업 진행(matches 메서드)
+		if(bcryptPasswordEncoder.matches(userPwd,encPwd)) {
+			
+			// 비밀번호가 일치할 경우
+			// => 탈퇴처리
+			int result = memberService.deleteMember(userId);
+			if(result>0) {
+				
+				// 로그아웃 방법 2가지
+				
+				session.removeAttribute("loginUser");
+				session.setAttribute("alertMsg", "성공적으로 탈퇴되었습니다.");
+				
+				return "redirect:/"; 
+			}else {
+				model.addAttribute("errorMSg","회원 탈퇴 실패");
+				
+				return "common/errorPage";
+			}
+			
+			
+		}else {
+			// 비밀번호가 일치하지 않을 경우
+			// => 비밀번호가 틀렸다고 알리고 마이페이지로 url 재요청
+			session.setAttribute("alertMsg", "비밀번호를 잘못 입력하였습니다. 확인해주세요.");
+			return "redirect:/myPage.me"; 
+		}
+		
+		
+	}
+	
 	
 	
 	

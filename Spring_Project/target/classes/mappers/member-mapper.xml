@@ -55,4 +55,30 @@
 		 			   #{phone},
 		 			   #{address})
 	</insert>
+	
+	
+	<update id="updateMember" parameterType="member">
+		UPDATE MEMBER 
+		SET USER_NAME = #{userName},
+			    EMAIL = #{email},		
+			   GENDER = #{gender},
+			      AGE = #{age},
+			    PHONE = #{phone},
+			  ADDRESS = #{address},
+		  MODIFY_DATE = SYSDATE	  			  
+		WHERE USER_ID = #{userId}
+		  AND STATUS = 'Y'
+			       
+		
+	
+	</update>
+	
+	<update id="deleteMember" parameterType="string">
+		UPDATE MEMBER
+			SET STATUS = 'N'
+			   ,MODIFY_DATE = SYSDATE
+			WHERE USER_ID = #{userId}
+		
+	
+	</update>
 </mapper>

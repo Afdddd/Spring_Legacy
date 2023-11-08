@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@NoArgsConstructor
+
 @Getter
 @Setter
+@NoArgsConstructor
 @ToString
 public class Board {
 	private int boardNo;		 //	BOARD_NO	NUMBER

@@ -20,11 +20,10 @@ import lombok.ToString;
  * 3. IDE (이클립스, STS) 를 재실행
  * 
  */
-
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class Member {
 	

@@ -30,5 +30,22 @@
 		 WHERE STATUS = 'Y'
 		 ORDER BY BOARD_NO DESC
 	</select>
+	
+	<insert id="insertBoard" parameterType="board">
+		
+		INSERT INTO BOARD(BOARD_NO, 
+		                  BOARD_TITLE, 
+		                  BOARD_WRITER, 
+		                  BOARD_CONTENT, 
+		                  ORIGIN_NAME, 
+		                  CHANGE_NAME)
+		   VALUES(SEQ_BNO.NEXTVAL,
+		                 #{boardTitle},
+		                 #{boardWriter},
+		                 #{boardContent},
+		                 #{originName},
+		                 #{changeName})
+	
+	</insert>
 
 </mapper>

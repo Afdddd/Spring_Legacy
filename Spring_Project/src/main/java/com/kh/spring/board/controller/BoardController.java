@@ -142,4 +142,27 @@ public class BoardController {
 		return changeName;
 	}
 	
+	@GetMapping("detail.bo")
+	public String selectBoard(int bno, Model model) {
+		
+		
+		// bno 에는 상세조회하고자 하는 해당 게시글 번호가 담겨있음
+		
+		// 1. 해당 게시글의 조회수 증가용 서비스 호출
+		int result = boardService.increaseCount(bno);
+		
+		// 2. 조회수 증가에 성공했다면 해당 게시글 상세 조회 서비스 호출
+		if(result>0) {
+			
+			Board b = boardService.selectBoard(bno);
+			model.addAttribute("b" , b);
+			
+			return "board/boardDetailView";
+			
+		}else {
+			model.addAttribute("errorMsg", "작성 실패!");
+			return "common/errorPage";
+		}
+	}
+	
 }

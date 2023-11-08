@@ -72,5 +72,12 @@
 	
 	</select>
 	
+	<update id="deleteBoard" parameterType="_int">
+		UPDATE BOARD
+		   SET STATUS = 'N'
+		 WHERE BOARD_NO = #{boardNo}
+	
+	</update>
+	
 
 </mapper>

@@ -165,4 +165,32 @@ public class BoardController {
 		}
 	}
 	
+	@PostMapping("delete.bo")
+	public String deleteBoard(int bno, String filePath, Model model, HttpSession session) {
+		int result = boardService.deleteBoard(bno);
+	
+		if(result>0) {
+			
+			// 기존에 첨부파일이 있을경우 서버로부터 해당 첨부 파일 삭제하기
+			// filePath 라는 매개변수에는 
+			// 기존에 첨부파일이 있었을 경우 수정파일명
+			// 기존에 첨부파일이 없었을 경우 "" 이 들어있음
+			if(!filePath.equals("")) {
+				// 기존에 첨부파일이 있었을 경우
+				// => 해당 파일을 삭제 처리
+				
+				// 해당 파일이 실제 저장되어있는 경로 알아내기
+				String realPath = session.getServletContext().getRealPath(filePath);
+				
+				new File(realPath).delete();
+			}
+			
+			session.setAttribute("alertMsg", "삭제 성공");
+			return "redirect:/list.bo";	
+		}else {
+			model.addAttribute("errorMsg", "작성 실패!");
+			return "common/errorPage";
+		}
+	}
+	
 }

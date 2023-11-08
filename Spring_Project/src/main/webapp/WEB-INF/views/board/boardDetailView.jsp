@@ -63,12 +63,26 @@ table * {margin:5px;}
                 <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
                 <c:if test="${not empty sessionScope.loginUser and sessionScope.loginUser.userId eq requestScope.b.boardWriter}">
                 	
-                <a class="btn btn-primary" onclick="postFormSubmt(1);">수정하기</a>
-                <a class="btn btn-danger" onclick="postFormSubmt(2);">삭제하기</a>
+                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
+                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
+                
+                <form id="postForm" action="" method="post">
+                	<input type="hidden" name="bno" value="${requestScope.b.boardNo}">
+                	<input type="hidden" name="filePath" value="${requestScope.b.changeName}">
+                </form>
                 
                 <script>
-                	function postFormSubmit(){
+                	function postFormSubmit(num){
                 		
+                		// num에 따라 위의 form 태그의 action 속성을 부여한 후 submit 시키기
+                		
+                		if(num==1){ // 수정하기
+                			$("#postForm").attr("action","updateForm.bo").submit();
+                		}else{ // 탈퇴하기
+                			$("#postForm").attr("action","delete.bo").submit();
+                		
+                		// jQeury의 submit 메서드 : 해당 form의 submit 버튼을 누른 효과
+                		}
                 	}
                 
                 </script>

@@ -193,4 +193,67 @@ public class BoardController {
 		}
 	}
 	
+	@PostMapping("updateForm.bo")
+	public String updateForm(int bno, Model model) {
+		Board b = boardService.selectBoard(bno);
+		
+		model.addAttribute("b",b);
+		
+		return "board/boardUpdateForm";
+		
+		
+	}
+	
+	@PostMapping("update.bo")
+	public String updateBoard(Board b, MultipartFile reupfile, HttpSession session, Model model) {
+		
+		// Board b : 제목, 내용
+		// MultipartFile reupfile : 새로 넘어온 첨부파일의 정보
+		
+		if(! reupfile.getOriginalFilename().equals("")){ // 넘어온 파일이 있다면
+			if(b.getChangeName() != null) { // 이미 게시판에 파일이 있다면
+				String realPath = session.getServletContext().getRealPath(b.getChangeName());				
+				new File(realPath).delete(); // 기존 파일 삭제
+			}
+			
+			String changeName = saveFile(reupfile,session); // 파일 업로드
+			
+			b.setOriginName(reupfile.getOriginalFilename()); // 원본이름 변경
+			b.setChangeName("resources/uploadFiles/"+changeName); // 수정이름 변경 
+		}
+		
+		/*
+		 * 이 시점 기준으로
+		 * b 에 무조건 담겨있는 내용
+		 * boardNo, boardTitle, boardContent 
+		 * 
+		 * 1. 새로 첨부된 파일 X , 기존 첨부차일 X
+		 * => orginName : null, changeName : null
+		 * 
+		 * 2. 새로 첨부된 파일 X, 기존 첨부파일 O
+		 * => originName : null, changeName : 기존첨부파일의 수정명
+		 * 
+		 * 3. 새로 첨부된 파일 o , 기존 첨부파일 X
+		 * => originName : 새로 첨부된 파일의 원본명, changeName : 새로 첨부된 파일의 수정명
+		 * 
+		 * 4. 새로 첨부된 파일 o , 기존 첨부파일 O
+		 * => originName : 새로 첨부된 파일의 원본명, changeName : 새로 첨부된 파일의 수정명
+		 * 
+		 */
+		
+		int result = boardService.updateBoard(b);
+		
+		
+		if(result>0) {
+			
+			session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+			return "redirect:/detail.bo?bno="+b.getBoardNo();
+			
+		}else {
+			model.addAttribute("errorMsg", "게시글 수정 실패");
+			return "common/erorrPage";
+		}
+		
+	}
+	
 }

@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.member.model.service.MemberService;
@@ -377,6 +378,14 @@ public class MemberController {
 		
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="idCheck.me", produces="text/html; charset=UTF-8")
+	public String idCheck(String checkId) {
+		
+		int count = memberService.idCheck(checkId);
+		
+		return (count>0)?"NNNNN":"NNNNY";
+	}
 	
 	
 	

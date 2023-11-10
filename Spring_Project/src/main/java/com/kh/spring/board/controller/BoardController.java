@@ -282,6 +282,13 @@ public class BoardController {
 		
 		return (result>0)?"success":"fail";
 	}
+	
+	@GetMapping(value="topList.bo",produces="application/json; charset=UTF-8" )
+	@ResponseBody
+	public String selectTopBoardList() {
+		ArrayList<Board> list = boardService.selectTopBoardList();		
+		return new Gson().toJson(list);
+	}
 }
 	
 

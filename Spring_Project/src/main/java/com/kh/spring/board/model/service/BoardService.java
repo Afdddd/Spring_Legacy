@@ -36,4 +36,7 @@ public interface BoardService {
 	
 	// 댓글 작성 서비스
 	int insertReply(Reply r);
+	
+	// 탑앤분석
+	ArrayList<Board> selectTopBoardList();
 }

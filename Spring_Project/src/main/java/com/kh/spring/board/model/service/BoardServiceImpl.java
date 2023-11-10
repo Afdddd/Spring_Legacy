@@ -62,16 +62,17 @@ public class BoardServiceImpl implements BoardService{
 		return boardDao.updateBoard(sqlSession,b);
 	}
 	
-	
 
 	@Override
 	public ArrayList<Reply> selectReplyList(int boardno) {
-		return null;
+		return boardDao.selectReplyList(sqlSession,boardno);
 	}
 
 	@Override
 	public int insertReply(Reply r) {
-		return 0;
+		return boardDao.insertReply(sqlSession,r);
 	}
+	
+	
 
 }

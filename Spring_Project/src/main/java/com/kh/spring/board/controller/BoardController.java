@@ -13,13 +13,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
 import com.kh.spring.board.model.service.BoardService;
 import com.kh.spring.board.model.vo.Board;
+import com.kh.spring.board.model.vo.Reply;
 import com.kh.spring.common.model.vo.PageInfo;
 import com.kh.spring.common.template.Pagination;
 
@@ -255,9 +256,32 @@ public class BoardController {
 			model.addAttribute("errorMsg", "게시글 수정 실패");
 			return "common/erorrPage";
 		}
+
+		
 		
 	}
 	
 
 	
+	@ResponseBody
+	@GetMapping(value="rlist.bo", produces="application/json; charset=UTF-8")
+	public String ajaxSelectReplyList(int bno) {
+		
+		ArrayList<Reply> list = boardService.selectReplyList(bno);
+		Gson gson = new Gson();
+		return gson.toJson(list);		
+	}
+	
+	
+	@ResponseBody
+	@GetMapping("rinsert.bo")
+	public String ajaxInsertReply(Reply r) {
+		
+	
+		int result = boardService.insertReply(r);
+		
+		return (result>0)?"success":"fail";
+	}
 }
+	
+

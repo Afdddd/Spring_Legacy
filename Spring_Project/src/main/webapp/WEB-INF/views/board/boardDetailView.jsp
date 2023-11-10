@@ -8,7 +8,20 @@
 <title>Insert title here</title>
 <style>
 table * {margin:5px;}
-        table {width:100%;}
+table {width:100%;}
+        
+ #piano {
+  text-align : center;
+  font-size : 30px;
+ }
+ 
+ label:hover {
+  	color : pink;
+ }
+ 
+ key:hover{
+ 	background-color : lightgray;
+ }
 </style>
 </head>
 <body>
@@ -16,6 +29,13 @@ table * {margin:5px;}
     <jsp:include page="../common/header.jsp" />
 
     <div class="content">
+        <br><br>
+        
+        <div id="piano">
+        <label class="black">■</label><label class="black">■</label>┃<label>■</label><label>■</label><label>■</label>┃<label>■</label><label>■</label><label>■</label>┃<label>■</label><label>■</label><label>■</label>┃<label>■</label><label>■</label><label>■</label>┃<label>■</label><label>■</label><label>■</label>┃<label>■</label><label>■</label><label>■</label> <br>
+		<label id="key">┻</label>┻┻┻┻┻┻┻┻┻┻┻┻┻┻┻┻┻┻┻┻┻┻┻ <br>
+		♪~ ♬ ♪♬~♪ ♪~ ♬ ♪♬~♪ ♪~ ♬ ♪♬~♪ ♪~ ♬ ♪
+        </div>
         <br><br>
         <div class="innerOuter">
             <h2>게시글 상세보기</h2>
@@ -27,7 +47,7 @@ table * {margin:5px;}
             <table id="contentArea" align="center" class="table">
                 <tr>
                     <th width="100">제목</th>
-                    <td colspan="3">제목입니다요</td>
+                    <td colspan="3">${requestScope.b.boardTitle}</td>
                 </tr>
                 <tr>
                     <th>작성자</th>
@@ -94,37 +114,120 @@ table * {margin:5px;}
             <table id="replyArea" class="table" align="center">
                 <thead>
                     <tr>
-                        <th colspan="2">
-                            <textarea class="form-control" name="" id="content" cols="55" rows="2" style="resize:none; width:100%;"></textarea>
-                        </th>
-                        <th style="vertical-align:middle"><button class="btn btn-secondary">등록하기</button></th>
+                    	<c:choose>
+                    	<c:when test="${empty sessionScope.loginUser }">
+	                    	<!-- 댓글창 막기 -->
+	                    	<th colspan="2">
+	                            <textarea class="form-control" cols="55" rows="2" style="resize:none; width:100%;" readonly>로구인 후 이용</textarea>
+	                        </th>
+	                        <th style="vertical-align:middle"><button class="btn btn-secondary" disabled>등록하기</button></th>
+                    	</c:when>
+                    	<c:otherwise>
+                    	    <th colspan="2">
+	                            <textarea class="form-control" name="" id="content" cols="55" rows="2" style="resize:none; width:100%;"></textarea>
+	                        </th>
+	                        <th style="vertical-align:middle"><button class="btn btn-secondary" onclick="addReply();">등록하기</button></th>
+                    	</c:otherwise>
+                    	</c:choose>
                     </tr>
                     <tr>
-                        <td colspan="3">댓글(<span id="rcount">3</span>)</td>
+                        <td colspan="3">댓글(<span id="rcount">0</span>)</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th>user02</th>
-                        <td>ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ꿀잼</td>
-                        <td>2020-03-12</td>
-                    </tr>
-                    <tr>
-                        <th>user01</th>
-                        <td>재밌어요</td>
-                        <td>2020-03-11</td>
-                    </tr>
-                    <tr>
-                        <th>admin</th>
-                        <td>댓글입니다!!</td>
-                        <td>2020-03-10</td>
-                    </tr>
+                    
                 </tbody>
             </table>
         </div>
         <br><br>
 
     </div>
+    
+    <script>
+    	$(function(){
+    		
+    		// 댓글 리스트 조회용 선언적 함수 호출
+    		selectReplyList();
+    		
+    		// 댓글 실시간
+    		setInterval(selectReplyList,1000);
+    	});
+    	
+    	
+    	function addReply(){
+    		
+    		// 댓글 작성 요청용 ajax 요청
+    		
+    		// 댓글 내용이 있는지 먼저 검사 후
+    		// 댓글 내용 중 공백 제거 후 길이가 0이 아닐경우 요청
+    		// => textarea 가 form 태그 내부에 있지 않음
+    		// required 속성으로 필수 입력값임을 나타낼 수 있음
+    		if($("#content").val().trim().length != 0){
+    			
+    			$.ajax({
+    				url : "rinsert.bo",
+    				type : "get",
+    				data : { // Ajax 요청 또한 Spring에서 커맨드 객체 방식 사용 가능
+    					refBoardNo : ${requestScope.b.boardNo},
+    					replyWriter : "${sessionScope.loginUser.userId}",
+    					replyContent : $("#content").val()
+    				},
+    				success : function(result){
+    					
+    					if(result =="success"){    						   						
+    						selectReplyList();
+    						$("#content").val("");
+    					}
+    				
+    					
+    					
+    				},
+    				error : function(){
+    					console.log("댓글 작성용 ajax 통신 실패");
+    				
+    				}
+    				
+    	    		
+    			});
+    			
+    		}else{
+    			alertify.alert("Alert","댓글 작성 후 등록 요청",function(){ alertify.success('ok');});
+    		}
+    		
+    		
+    	}
+    	
+    	function selectReplyList(){
+    		
+    		
+    		// 해당 게시글에 딸린 댓들 조회 요청을 ajax 요청
+    		$.ajax({
+    			url  : "rlist.bo",
+    			type : "get",
+    			data : {bno : ${requestScope.b.boardNo}},
+    			success : function(result){
+    					let resultStr = ""
+    					
+    					for(let i=0;i<result.length;i++){
+    						resultStr += "<tr>"
+    								  		+"<th>"+result[i].replyWriter +"</th>"
+    								  		+"<td>"+result[i].replyContent+"</td>"
+    								  		+"<td>"+result[i].createDate+"</td>"
+    								  	+"</tr>";
+    					}			
+    					$("#replyArea>tbody").html(resultStr);
+    					$("#rcount").text(result.length);
+    					
+    			},
+    			error : function(){
+    				console.log("댓글 리스트 조회용 ajax 통신 실패");
+    			}
+    		});
+    		
+    	}
+    	
+    </script>
+    
     
     <jsp:include page="../common/footer.jsp" />
     

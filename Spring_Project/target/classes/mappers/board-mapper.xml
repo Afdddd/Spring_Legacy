@@ -2,6 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="boardMapper">
 
+	<resultMap id="replyResultSet" type="reply">
+		<result column="REPLY_NO" property="replyNo"/>
+		<result column="REPLY_CONTENT" property="replyContent"/>
+		<result column="REPLY_WRITER" property="replyWriter"/>
+		<result column="CREATE_DATE" property="createDate"/>
+	</resultMap>
+
 	<resultMap id="boardResultSet" type="board">
 		<result column ="BOARD_NO" property="boardNo"/>
 		<result column ="BOARD_TITLE" property="boardTitle"/>
@@ -89,6 +96,31 @@
 		   AND STATUS = 'Y'
 	
 	</update>
+	
+	<select id="selectReplyList" parameterType="_int" resultMap="replyResultSet">
+		SELECT REPLY_NO
+             , REPLY_WRITER
+             , REPLY_CONTENT
+             , TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') AS "CREATE_DATE"
+          FROM REPLY
+         WHERE STATUS = 'Y'
+  	       AND REF_BNO = #{boardNo}
+      ORDER BY REPLY_NO DESC
+	
+	</select>
+	
+	<insert id="insertReply" parameterType="reply">	
+		INSERT INTO REPLY(REPLY_NO
+						, REPLY_CONTENT
+						, REF_BNO
+						, REPLY_WRITER)
+				   VALUES(SEQ_RNO.NEXTVAL
+				   		, #{replyContent}
+				   		, #{refBoardNo}
+				   		, #{replyWriter}
+				   )
+	
+	</insert>
 	
 
 </mapper>
